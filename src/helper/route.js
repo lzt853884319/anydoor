@@ -13,6 +13,7 @@ const template = HandleBars.compile(source);
 const config = require("../config/defaultConfig");
 const mime = require("mime-types");
 const compress = require("./compress");
+const range = require("./range");
 
 module.exports = async function (req, res, filePath) {
     try {
@@ -20,8 +21,19 @@ module.exports = async function (req, res, filePath) {
         if(stats.isFile()) {
             res.statusCode = 200;
             res.setHeader("Content-Type", mime.lookup(filePath));
-            let rs = fs.createReadStream(filePath);
-            // rs = compress(rs, req, res);
+            let rs;
+            const {code, start, end} = range(stats.size, req, res);
+
+            if(code === 200) {
+                res.statusCode = 200;
+                rs = fs.createReadStream(filePath);
+            } else {
+                res.statusCode = 206;
+                rs = fs.createReadStream(filePath, {start, end});
+            }
+
+
+            rs = compress(rs, req, res);
             rs.pipe(res);
         } else if(stats.isDirectory()) {
             const files = await readdir(filePath);

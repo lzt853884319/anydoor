@@ -1,0 +1,10 @@
+As a general rule, building a DLL with static CRT linkage is highly discouraged, and intermixing CRTs in the same app is something to avoid at any cost.
+
+Reading and comprehending Microsoft Knowledge Base articles KB94248 and KB140584 is a must for any Windows developer. Especially important is full understanding if you are not going to follow the advice given above.
+
+How To Use the C Run-Time
+How to link with the correct C Run-Time CRT library
+Potential Errors Passing CRT Objects Across DLL Boundaries
+If your app is misbehaving in some strange way, or it is suffering from memory corruption, before asking for further help, please try first to rebuild every single library your app uses as well as your app using the debug multithreaded dynamic C runtime.
+
+If you get linkage errors read section 5.7 of the FAQ document.
